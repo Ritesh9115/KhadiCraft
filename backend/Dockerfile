@@ -21,7 +21,7 @@ COPY . .
 RUN composer dump-autoload --no-dev --classmap-authoritative
 
 # ── Stage 2: Runtime image ───────────────────────────────────
-FROM php:8.2-fpm-alpine
+FROM php:8.4-cli
 
 LABEL maintainer="KhadiCraft by Goldy <hello@khadicraft.in>"
 
