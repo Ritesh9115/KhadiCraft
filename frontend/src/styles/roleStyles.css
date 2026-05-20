@@ -1,0 +1,363 @@
+/* Role-based Navigation Styles */
+.role-navigation {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.mobile-role-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #EDE3D4;
+}
+
+/* Role Dashboard Styles */
+.role-dashboard-welcome {
+  margin-bottom: 32px;
+}
+
+.welcome-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.welcome-header h2 {
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: #1B4332;
+  margin: 0;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: #C5933A;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 20px;
+}
+
+/* Admin Dashboard Styles */
+.admin-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.admin-quick-stats .stat-card {
+  background: #fff;
+  border: 1px solid #EDE3D4;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+}
+
+.admin-quick-stats .stat-card:hover {
+  border-color: #1B4332;
+  box-shadow: 0 4px 20px rgba(27, 67, 50, 0.1);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F7F2EA;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.stat-content h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1B4332;
+  margin: 0 0 8px 0;
+}
+
+.stat-content p {
+  font-size: 0.85rem;
+  color: #5C5C52;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.stat-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #C5933A;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: gap 0.2s ease;
+}
+
+.stat-link:hover {
+  gap: 10px;
+}
+
+/* Tailor Dashboard Styles */
+.tailor-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.tailor-quick-stats .stat-card {
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+}
+
+.tailor-quick-stats .stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3);
+}
+
+.tailor-quick-stats .stat-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.tailor-quick-stats .stat-content h3 {
+  color: #fff;
+}
+
+.tailor-quick-stats .stat-content p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tailor-quick-stats .stat-link {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+}
+
+.tailor-quick-stats .stat-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Customer Dashboard Styles */
+.customer-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.customer-quick-stats .stat-card {
+  background: #fff;
+  border: 1px solid #EDE3D4;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.customer-quick-stats .stat-card:hover {
+  border-color: #1B4332;
+  transform: translateY(-1px);
+}
+
+.customer-quick-stats .stat-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  background: #F7F2EA;
+  border-radius: 8px;
+}
+
+.customer-quick-stats .stat-content h3 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.customer-quick-stats .stat-content p {
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+}
+
+.customer-quick-stats .stat-link {
+  font-size: 0.75rem;
+}
+
+/* Quick Actions Styles */
+.role-quick-actions {
+  margin: 32px 0;
+}
+
+.role-quick-actions h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1B4332;
+  margin-bottom: 16px;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.quick-action-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #EDE3D4;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+.quick-action-card:hover {
+  border-color: #1B4332;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(27, 67, 50, 0.1);
+}
+
+.quick-action-icon {
+  font-size: 1.5rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F7F2EA;
+  border-radius: 8px;
+}
+
+.quick-action-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #1B4332;
+}
+
+/* Role-specific color schemes */
+.admin-theme {
+  --primary-color: #C5933A;
+  --primary-dark: #A67C2A;
+  --primary-light: #E2B96F;
+  --bg-primary: #1B4332;
+  --text-primary: #1A1A18;
+}
+
+.tailor-theme {
+  --primary-color: #8B5CF6;
+  --primary-dark: #7C3AED;
+  --primary-light: #A78BFA;
+  --bg-primary: #8B5CF6;
+  --text-primary: #1A1A18;
+}
+
+.customer-theme {
+  --primary-color: #1B4332;
+  --primary-dark: #0D2A1E;
+  --primary-light: #2D6A4F;
+  --bg-primary: #1B4332;
+  --text-primary: #1A1A18;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .welcome-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-quick-stats,
+  .tailor-quick-stats,
+  .customer-quick-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .role-navigation {
+    flex-wrap: wrap;
+  }
+}
+
+/* Animation utilities */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading states */
+.role-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #5C5C52;
+}
+
+.role-loading::after {
+  content: '';
+  width: 32px;
+  height: 32px;
+  border: 3px solid #EDE3D4;
+  border-top-color: #1B4332;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

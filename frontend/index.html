@@ -1,0 +1,46 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="KhadiCraft by Goldy — Pure handwoven khadi fabrics, custom tailoring & wholesale from Chandigarh"/>
+    <title>KhadiCraft by Goldy — Pure. Handwoven. Timeless.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { scroll-behavior: smooth; }
+      body { font-family: 'Jost', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+      #root { min-height: 100vh; }
+      .kc-spinner {
+        position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+        background: #FDFAF6; z-index: 9999;
+      }
+      .kc-spinner-inner {
+        text-align: center;
+      }
+      .kc-spinner-logo {
+        width: 52px; height: 52px; border-radius: 50%; background: #1B4332;
+        display: flex; align-items: center; justify-content: center;
+        font-family: Georgia, serif; font-size: 22px; color: #fff; font-weight: 600;
+        margin: 0 auto 14px; animation: pulse 1.5s ease-in-out infinite;
+      }
+      .kc-spinner-text { font-size: 0.85rem; color: #9ca3af; letter-spacing: 1px; }
+      @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="kc-spinner">
+        <div class="kc-spinner-inner">
+          <div class="kc-spinner-logo">K</div>
+          <div class="kc-spinner-text">Loading KhadiCraft...</div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
