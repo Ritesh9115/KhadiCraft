@@ -18,6 +18,7 @@ return [
             'journal_mode'            => null,
             'synchronous'             => null,
         ],
+        
 
         'mysql' => [
             'driver'         => 'mysql',
