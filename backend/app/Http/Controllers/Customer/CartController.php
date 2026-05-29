@@ -10,8 +10,6 @@ class CartController extends Controller
 {
     public function index(Request $request)
     {
-        // For now, return cart from session/database
-        // This would typically be implemented with a Cart model
         $cartItems = [];
         
         return response()->json([
