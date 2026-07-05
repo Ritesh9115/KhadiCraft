@@ -15,6 +15,7 @@ router.post('/addresses',                     ctrl.addAddress);
 router.put('/addresses/:id',                  ctrl.updateAddress);
 router.delete('/addresses/:id',               ctrl.deleteAddress);
 router.patch('/addresses/:id/default',        ctrl.setDefaultAddress);
+router.put('/addresses/:id/default',          ctrl.setDefaultAddress);
 
 // Notifications
 router.get('/notifications',                  ctrl.notifications);

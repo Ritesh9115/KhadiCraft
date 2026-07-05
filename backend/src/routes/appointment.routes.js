@@ -9,6 +9,8 @@ router.get('/',                               ctrl.index);
 router.post('/',                              ctrl.store);
 router.get('/:id',                            ctrl.show);
 router.patch('/:id/cancel',                   ctrl.cancel);
+router.put('/:id/cancel',                     ctrl.cancel);
 router.patch('/:id/reschedule',               ctrl.reschedule);
+router.put('/:id/reschedule',                 ctrl.reschedule);
 
 module.exports = router;

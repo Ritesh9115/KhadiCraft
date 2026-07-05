@@ -115,7 +115,7 @@ export const measurementAPI = {
 
 // ── REVIEWS ─────────────────────────────────────────────────
 export const reviewAPI = {
-  list:   (productId) => api.get(`/reviews/${productId}`),
+  list:   (productId) => api.get(`/reviews/products/${productId}`),
   add:    (d)         => api.post('/reviews', d),
   update: (id, d)     => api.put(`/reviews/${id}`, d),
   delete: (id)        => api.delete(`/reviews/${id}`),
@@ -139,7 +139,7 @@ export const wholesaleAPI = {
 
 // ── CHATBOT ─────────────────────────────────────────────────
 export const chatbotAPI = {
-  send: (d) => api.post('/chatbot', d),
+  send: (d) => api.post('/chatbot/respond', d),
 };
 
 // ── ADMIN ───────────────────────────────────────────────────
@@ -163,7 +163,7 @@ export const adminAPI = {
   deleteProduct:  (id)     => api.delete(`/admin/products/${id}`),
   toggleProduct: (id)      => api.put(`/admin/products/${id}/toggle`),
   updateStock:   (id,d)    => api.put(`/admin/products/${id}/stock`, d),
-  bulkAction:    (d)       => api.post('/admin/products/bulk', d),
+  bulkAction:    (d)       => api.post('/admin/products/bulk-action', d),
   uploadImages:  (id, fd)  => api.post(`/admin/products/${id}/images`, fd, { headers: { 'Content-Type': 'multipart/form-data' } }),
   deleteImage:   (id, iid) => api.delete(`/admin/products/${id}/images/${iid}`),
   addVariant:    (id, d)   => api.post(`/admin/products/${id}/variants`, d),
@@ -237,7 +237,7 @@ export const adminAPI = {
   // Banners
   banners:       ()      => api.get('/admin/banners'),
   createBanner:  (fd)    => api.post('/admin/banners', fd, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  updateBanner:  (id,fd) => api.post(`/admin/banners/${id}?_method=PUT`, fd, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  updateBanner:  (id,fd) => api.put(`/admin/banners/${id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } }),
   deleteBanner:  (id)    => api.delete(`/admin/banners/${id}`),
   toggleBanner:  (id)    => api.put(`/admin/banners/${id}/toggle`),
 

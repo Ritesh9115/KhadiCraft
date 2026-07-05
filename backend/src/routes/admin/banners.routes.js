@@ -13,6 +13,7 @@ router.get('/banners/:id',                    ctrl.show);
 router.put('/banners/:id', uploadBanner.single('image'), ctrl.update);
 router.delete('/banners/:id',                 ctrl.destroy);
 router.patch('/banners/:id/toggle',           ctrl.toggle);
+router.put('/banners/:id/toggle',             ctrl.toggle);
 router.post('/banners/reorder',               ctrl.reorder);
 
 module.exports = router;

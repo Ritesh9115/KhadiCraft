@@ -13,6 +13,6 @@ router.get('/reports/customers',              ctrl.customers);
 router.get('/reports/inventory',              ctrl.inventory);
 router.get('/reports/custom-orders',          ctrl.customOrders);
 router.get('/reports/tailor-performance',     ctrl.tailorPerformance);
-router.get('/reports/export',                 ctrl.export);
+router.get('/reports/export/:type',                 ctrl.export);
 
 module.exports = router;
