@@ -40,16 +40,18 @@ exports.register = async (req, res) => {
 
     const user = await User.create({
       name, email, phone, password, role: 'customer',
-      otp, otp_expires_at: otpExpiresAt,
+      email_verified: true,
+      // otp, otp_expires_at: otpExpiresAt,
     });
 
-    await sendOtpEmail(email, name, otp, 'verify');
+    // Disable OTP for v1
+    // await sendOtpEmail(email, name, otp, 'verify');
 
     const token = signToken(user._id);
 
     return res.status(201).json({
       success: true,
-      message: 'Registration successful. Please verify your email with the OTP sent.',
+      message: 'Registration successful. Welcome to KhadiCraft!',
       token,
       user: userResource(user),
     });

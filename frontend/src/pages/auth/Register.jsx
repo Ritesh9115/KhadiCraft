@@ -15,8 +15,8 @@ export default function Register() {
     setErrors({});
     try {
       await register(form);
-      toast.success('Account created! Please verify your email.');
-      navigate('/verify-email', { state: { email: form.email } });
+      toast.success('Account created! Welcome to KhadiCraft.');
+      navigate('/');
     } catch (err) {
       if (err.errors) setErrors(err.errors);
       toast.error(err.message);
