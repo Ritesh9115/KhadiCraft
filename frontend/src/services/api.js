@@ -1,12 +1,18 @@
 // src/services/api.js  — COMPLETE FIXED VERSION
 import axios from 'axios';
 
+let rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+rawApiUrl = rawApiUrl.replace(/\/$/, ''); // remove trailing slash if any
+if (!rawApiUrl.endsWith('/api')) {
+  rawApiUrl += '/api';
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
+  baseURL: rawApiUrl,
   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 });
 
-export const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api').replace('/api', '');
+export const API_BASE = rawApiUrl.replace('/api', '');
 export const getImageUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http')) return path;
