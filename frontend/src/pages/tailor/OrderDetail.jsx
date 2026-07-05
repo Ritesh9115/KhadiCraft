@@ -1,7 +1,7 @@
 // src/pages/tailor/OrderDetail.jsx
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { tailorAPI } from '../../services/api';
+import { tailorAPI, getImageUrl} from '../../services/api';
 import toast from 'react-hot-toast';
 
 const STAGE_LABELS = {
@@ -124,7 +124,7 @@ export default function TailorOrderDetail() {
             </span>
           </div>
           <p style={{ color:'#6b7280', fontSize:'0.83rem' }}>
-            👤 {order.user?.name} · 👔 {order.style_type?.replace('_',' ')}
+            👤 {(order.user || order.user_id)?.name} · 👔 {order.style_type?.replace('_',' ')}
             {order.estimated_ready_date && <span style={{ color:'#f59e0b', marginLeft:'10px' }}>📅 Due: {new Date(order.estimated_ready_date).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'})}</span>}
           </p>
         </div>
@@ -185,7 +185,7 @@ export default function TailorOrderDetail() {
             <div style={{ background:'#fff', border:'1px solid #e5e7eb', borderRadius:'12px', padding:'20px' }}>
               <h3 style={{ fontSize:'0.9rem', fontWeight:600, marginBottom:'12px' }}>🖼️ Reference Image</h3>
               <img
-                src={`http://localhost:8000/storage/${order.reference_image}`}
+                src={`${getImageUrl(order.reference_image)}`}
                 alt="Reference"
                 style={{ maxWidth:'100%', maxHeight:'300px', borderRadius:'8px', border:'1px solid #e5e7eb', objectFit:'contain' }}
               />
@@ -261,10 +261,10 @@ export default function TailorOrderDetail() {
           <div style={{ background:'#fff', border:'1px solid #e5e7eb', borderRadius:'12px', padding:'18px' }}>
             <h3 style={{ fontSize:'0.88rem', fontWeight:600, marginBottom:'12px' }}>👤 Customer</h3>
             <div style={{ display:'flex', gap:'10px', alignItems:'center', marginBottom:'10px' }}>
-              <div style={{ width:'36px', height:'36px', borderRadius:'50%', background:'#1B4332', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:600, flexShrink:0 }}>{order.user?.name?.[0]}</div>
+              <div style={{ width:'36px', height:'36px', borderRadius:'50%', background:'#1B4332', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:600, flexShrink:0 }}>{(order.user || order.user_id)?.name?.[0]}</div>
               <div>
-                <div style={{ fontWeight:500, fontSize:'0.85rem' }}>{order.user?.name}</div>
-                <div style={{ fontSize:'0.72rem', color:'#9ca3af' }}>{order.user?.phone}</div>
+                <div style={{ fontWeight:500, fontSize:'0.85rem' }}>{(order.user || order.user_id)?.name}</div>
+                <div style={{ fontSize:'0.72rem', color:'#9ca3af' }}>{(order.user || order.user_id)?.phone}</div>
               </div>
             </div>
           </div>

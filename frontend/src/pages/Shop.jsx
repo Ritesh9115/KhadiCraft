@@ -3,7 +3,7 @@
 // ============================================================
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link, useParams, useNavigate } from 'react-router-dom';
-import { productAPI, profileAPI, orderAPI, paymentAPI } from '../services/api';
+import { productAPI, profileAPI, orderAPI, paymentAPI, getImageUrl} from '../services/api';
 import { useCartStore } from '../context/authStore';
 import toast from 'react-hot-toast';
 
@@ -177,7 +177,7 @@ function ProductCard({ product: p, listView, onAddToCart }) {
 
   const isFabric = /fabric|thaan|linen|cotton|silk|wool/i.test(p.category?.name || p.category?.slug || '');
   const placeholder = isFabric ? '/placeholders/product-fabric.png' : '/placeholders/product-kurta.png';
-  const imgSrc = p.thumbnail && !imgErr ? `http://localhost:8000/storage/${p.thumbnail}` : placeholder;
+  const imgSrc = p.thumbnail && !imgErr ? `${getImageUrl(p.thumbnail)}` : placeholder;
 
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
@@ -251,7 +251,7 @@ export function Cart() {
             <div key={item.key} style={{ display: 'flex', gap: '16px', background: '#fff', borderRadius: '8px', padding: '16px', border: '1px solid #f0ece4' }}>
               <div style={{ width: '90px', height: '90px', background: '#f7f2ea', borderRadius: '6px', flexShrink: 0, overflow: 'hidden' }}>
                 <img
-                  src={item.product.thumbnail ? `http://localhost:8000/storage/${item.product.thumbnail}` : '/placeholders/product-kurta.png'}
+                  src={item.product.thumbnail ? `${getImageUrl(item.product.thumbnail)}` : '/placeholders/product-kurta.png'}
                   alt={item.product.name}
                   onError={e => { e.target.src='/placeholders/product-kurta.png'; }}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -424,7 +424,7 @@ export function Checkout() {
                   <div key={item.key} style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                     <div style={{ width: '48px', height: '48px', background: '#f7f2ea', borderRadius: '6px', flexShrink: 0, overflow: 'hidden' }}>
                     <img
-                      src={item.product.thumbnail ? `http://localhost:8000/storage/${item.product.thumbnail}` : '/placeholders/product-kurta.png'}
+                      src={item.product.thumbnail ? `${getImageUrl(item.product.thumbnail)}` : '/placeholders/product-kurta.png'}
                       alt={item.product.name}
                       onError={e => { e.target.src='/placeholders/product-kurta.png'; }}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}

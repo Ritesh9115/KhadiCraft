@@ -45,11 +45,17 @@ export const useAuthStore = create((set, get) => ({
   },
 
   logout: async () => {
-    try { await authAPI.logout(); } catch {}
-    localStorage.removeItem('kc_token');
-    localStorage.removeItem('kc_user');
-    set({ user: null, token: null });
-    window.location.href = '/login';
+    try {
+      authAPI.logout().catch(() => {});
+    } catch {}
+    
+    // Give Axios interceptor a brief moment to capture the token before clearing it
+    setTimeout(() => {
+      localStorage.removeItem('kc_token');
+      localStorage.removeItem('kc_user');
+      set({ user: null, token: null });
+      window.location.href = '/login';
+    }, 50);
   },
 
   fetchMe: async () => {

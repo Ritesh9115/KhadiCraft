@@ -10,13 +10,25 @@ export default function AdminOrderDetail() {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [tracking, setTracking] = useState({ tracking_number: '', courier: '' });
 
+  const [adjustModal, setAdjustModal] = useState(false);
+  const [adjustments, setAdjustments] = useState('');
+
   useEffect(() => {
-    adminAPI.order(id)
-      .then(r => setOrder(r.data.data))
-      .finally(() => setLoading(false));
+    loadAll();
   }, [id]);
+
+  const loadAll = async () => {
+    setLoading(true);
+    try {
+      const orderRes = await adminAPI.order(id);
+      setOrder(orderRes.data.data);
+      setAdjustments(orderRes.data.data.measurements || '');
+    } catch { toast.error('Failed to load order'); }
+    finally { setLoading(false); }
+  };
 
   const updateStatus = async (status) => {
     await adminAPI.updateOrderStatus(id, { status });
@@ -30,6 +42,17 @@ export default function AdminOrderDetail() {
     toast.success('Tracking saved!');
   };
 
+  const saveAdjustments = async () => {
+    setSaving(true);
+    try {
+      await adminAPI.saveOrderAdjustments(id, { adjustments });
+      toast.success('Adjustments saved!');
+      setAdjustModal(false);
+      await loadAll();
+    } catch { toast.error('Failed to save'); }
+    finally { setSaving(false); }
+  };
+
   if (loading) return <div className="admin-loading"><span className="spinner" /></div>;
   if (!order) return <div>Order not found</div>;
 
@@ -40,7 +63,7 @@ export default function AdminOrderDetail() {
       <div className="admin-page-header">
         <div>
           <h1>Order #{order.order_number}</h1>
-          <p>{new Date(order.created_at).toLocaleString()} · {order.user?.name}</p>
+          <p>{new Date(order.created_at || order.createdAt).toLocaleString()} · {(order.user || order.user_id)?.name}</p>
         </div>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button className="btn-outline-sm" onClick={() => {
@@ -52,6 +75,7 @@ export default function AdminOrderDetail() {
               a.click();
             });
           }}>🧾 Download Invoice</button>
+          <button className="btn-primary-sm" onClick={() => setAdjustModal(true)}>📏 Adjustments</button>
           <Link to="/admin/orders"><button className="btn-outline-sm">← Back</button></Link>
         </div>
       </div>
@@ -120,6 +144,16 @@ export default function AdminOrderDetail() {
             </div>
             <button className="btn-primary-sm" onClick={saveTracking}>💾 Save Tracking</button>
           </div>
+
+          {/* Adjustments */}
+          {(order.measurements) && (
+            <div className="admin-table-card">
+              <h3 style={{ marginBottom: '14px', fontSize: '0.9rem', fontWeight: 600 }}>📏 Adjustments</h3>
+              <div style={{ background: '#f9fafb', borderRadius: '6px', padding: '12px', fontSize: '0.83rem', whiteSpace: 'pre-wrap' }}>
+                {order.measurements}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sidebar */}
@@ -127,10 +161,11 @@ export default function AdminOrderDetail() {
           <div className="admin-table-card">
             <h3 style={{ marginBottom: '14px', fontSize: '0.9rem', fontWeight: 600 }}>Customer</h3>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '12px' }}>
-              <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#1B4332', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}>{order.user?.name?.[0]}</div>
+              <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#1B4332', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}>{(order.user || order.user_id)?.name?.[0]}</div>
               <div>
-                <div style={{ fontWeight: 500, fontSize: '0.85rem' }}>{order.user?.name}</div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{order.user?.email}</div>
+                <div style={{ fontWeight: 500, fontSize: '0.85rem' }}>{(order.user || order.user_id)?.name}</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{(order.user || order.user_id)?.email}</div>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{(order.user || order.user_id)?.phone}</div>
               </div>
             </div>
             <div style={{ padding: '12px', background: '#f9fafb', borderRadius: '6px', fontSize: '0.8rem', lineHeight: 1.7, color: '#374151' }}>
@@ -164,6 +199,23 @@ export default function AdminOrderDetail() {
           </div>
         </div>
       </div>
+
+      {/* Adjustments Modal */}
+      {adjustModal && (
+        <div className="modal-backdrop" onClick={() => setAdjustModal(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header"><h2>Adjustments / Measurements</h2><button className="modal-close" onClick={() => setAdjustModal(false)}>✕</button></div>
+            <div className="form-group" style={{ marginBottom: '16px' }}>
+              <label className="form-label">Enter Adjustments</label>
+              <textarea className="form-textarea" rows={6} placeholder="e.g. Sleeve length -2 inches, or custom measurements..." value={adjustments} onChange={e => setAdjustments(e.target.value)} />
+            </div>
+            <div className="modal-footer">
+              <button className="btn-outline-sm" onClick={() => setAdjustModal(false)}>Cancel</button>
+              <button className="btn-primary-sm" onClick={saveAdjustments} disabled={saving}>{saving ? 'Saving...' : 'Save Adjustments'}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

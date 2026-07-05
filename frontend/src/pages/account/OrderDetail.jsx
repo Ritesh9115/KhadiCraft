@@ -1,7 +1,7 @@
 // src/pages/account/OrderDetail.jsx
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { orderAPI } from '../../services/api';
+import { orderAPI, getImageUrl } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const STATUS_COLOR = {
@@ -69,7 +69,7 @@ export default function OrderDetail() {
           {(order.items||[]).map(item => (
             <div key={item.id} style={{ display:'flex', gap:'12px', alignItems:'center', padding:'11px 0', borderBottom:'1px solid #f3f4f6' }}>
               <div style={{ width:'52px', height:'56px', background:'#f7f2ea', borderRadius:'6px', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.3rem', flexShrink:0, overflow:'hidden' }}>
-                {item.product?.thumbnail ? <img src={`http://localhost:8000/storage/${item.product.thumbnail}`} style={{ width:'100%', height:'100%', objectFit:'cover' }} alt=""/> : '🏷️'}
+                {item.product?.thumbnail ? <img src={getImageUrl(item.product.thumbnail)} style={{ width:'100%', height:'100%', objectFit:'cover' }} alt=""/> : '🏷️'}
               </div>
               <div style={{ flex:1 }}>
                 <div style={{ fontWeight:500, fontSize:'0.86rem' }}>{item.product?.name || item.product_name}</div>

@@ -164,7 +164,7 @@ export default function CustomTailoring() {
             {fabrics.map(f => {
               const rawPath = f.thumbnail || f.images?.[0]?.image_path;
               const imgUrl = rawPath
-                ? (rawPath.startsWith('http') ? rawPath : `http://localhost:8000/storage/${rawPath}`)
+                ? (rawPath.startsWith('http') ? rawPath : `http://localhost:5001/storage/${rawPath}`)
                 : '/placeholders/product-fabric.png';
               const isSelected = fabric?.id === f.id;
               return (

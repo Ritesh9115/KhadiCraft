@@ -1,7 +1,7 @@
 // src/pages/admin/Products.jsx
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { adminAPI } from '../../services/api';
+import { adminAPI, getImageUrl} from '../../services/api';
 import toast from 'react-hot-toast';
 
 export default function AdminProducts() {
@@ -158,7 +158,7 @@ export default function AdminProducts() {
                   <td>
                     <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
                       <div style={{width:'40px',height:'40px',borderRadius:'6px',background:'#f3f4f6',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.2rem',flexShrink:0}}>
-                        {p.thumbnail ? <img src={`http://localhost:8000/storage/${p.thumbnail}`} alt="" style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'6px'}}/> : '🏷️'}
+                        {p.thumbnail ? <img src={`${getImageUrl(p.thumbnail)}`} alt="" style={{width:'100%',height:'100%',objectFit:'cover',borderRadius:'6px'}}/> : '🏷️'}
                       </div>
                       <div>
                         <div style={{fontWeight:500,fontSize:'0.85rem',maxWidth:'200px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{p.name}</div>

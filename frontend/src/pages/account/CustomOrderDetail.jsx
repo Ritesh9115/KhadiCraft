@@ -1,7 +1,7 @@
 // src/pages/account/CustomOrderDetail.jsx
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { customOrderAPI } from '../../services/api';
+import { customOrderAPI, getImageUrl} from '../../services/api';
 import toast from 'react-hot-toast';
 
 const STAGES = ['pending','confirmed','fabric_selected','measurement_received','cutting','stitching','finishing','quality_check','ready','dispatched','delivered'];
@@ -142,7 +142,7 @@ export default function CustomOrderDetail() {
             <h3 style={{ fontFamily:'Georgia,serif', fontSize:'0.95rem', fontWeight:500, marginBottom:'12px' }}>🖼️ Reference Image</h3>
             {order.reference_image ? (
               <div>
-                <img src={`http://localhost:8000/storage/${order.reference_image}`} alt="Reference" style={{ maxWidth:'100%', maxHeight:'250px', borderRadius:'8px', border:'1px solid #e5e7eb', objectFit:'contain' }}/>
+                <img src={`${getImageUrl(order.reference_image)}`} alt="Reference" style={{ maxWidth:'100%', maxHeight:'250px', borderRadius:'8px', border:'1px solid #e5e7eb', objectFit:'contain' }}/>
                 {!['delivered','cancelled'].includes(order.status) && (
                   <label style={{ display:'inline-block', marginTop:'10px', padding:'7px 16px', border:'1px solid #e5e7eb', borderRadius:'6px', fontSize:'0.78rem', cursor:'pointer', color:'#6b7280' }}>
                     🔄 Change Image

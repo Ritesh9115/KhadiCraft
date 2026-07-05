@@ -158,9 +158,9 @@ export default function AdminWholesale() {
                     <div style={{ fontSize: '0.72rem', color: '#6b7280' }}>GST: {buyer.gst_number}</div>
                   </td>
                   <td>
-                    <div style={{ fontWeight: 500 }}>{buyer.user?.name}</div>
-                    <div style={{ fontSize: '0.72rem', color: '#6b7280' }}>{buyer.user?.email}</div>
-                    <div style={{ fontSize: '0.72rem', color: '#6b7280' }}>{buyer.user?.phone}</div>
+                    <div style={{ fontWeight: 500 }}>{buyer.contact_name || buyer.user?.name}</div>
+                    <div style={{ fontSize: '0.72rem', color: '#6b7280' }}>{buyer.email || buyer.user?.email}</div>
+                    <div style={{ fontSize: '0.72rem', color: '#6b7280' }}>{buyer.phone || buyer.user?.phone}</div>
                   </td>
                   <td>
                     <span style={{ 

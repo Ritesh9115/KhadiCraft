@@ -2,9 +2,16 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
   headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
 });
+
+export const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5001/api').replace('/api', '');
+export const getImageUrl = (path) => {
+  if (!path) return null;
+  if (path.startsWith('http')) return path;
+  return `${API_BASE}/storage/${path}`;
+};
 
 // ── Auth token ──────────────────────────────────────────────
 api.interceptors.request.use((config) => {
@@ -123,7 +130,8 @@ export const paymentAPI = {
 
 // ── WHOLESALE ───────────────────────────────────────────────
 export const wholesaleAPI = {
-  register:     (d) => api.post('/wholesale/register', d),
+  apply:        (d) => api.post('/wholesale/apply', d),    // Public form — no auth needed
+  register:     (d) => api.post('/wholesale/register', d), // Authenticated registration
   status:       ()  => api.get('/wholesale/status'),
   requestQuote: (d) => api.post('/wholesale/quote-request', d),
   myQuotes:     ()  => api.get('/wholesale/quotes'),
@@ -149,8 +157,9 @@ export const adminAPI = {
 
   // Products
   products:      (p)       => api.get('/admin/products', { params: p }),
+  product:       (id)      => api.get(`/admin/products/${id}`),
   createProduct:  (fd)     => api.post('/admin/products', fd, { headers: { 'Content-Type': 'multipart/form-data' } }),
-  updateProduct:  (id,fd)  => api.post(`/admin/products/${id}?_method=PUT`, fd, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  updateProduct:  (id,fd)  => api.put(`/admin/products/${id}`, fd, { headers: { 'Content-Type': 'multipart/form-data' } }),
   deleteProduct:  (id)     => api.delete(`/admin/products/${id}`),
   toggleProduct: (id)      => api.put(`/admin/products/${id}/toggle`),
   updateStock:   (id,d)    => api.put(`/admin/products/${id}/stock`, d),
@@ -161,9 +170,6 @@ export const adminAPI = {
   updateVariant: (id,vid,d)=> api.put(`/admin/products/${id}/variants/${vid}`, d),
   deleteVariant: (id, vid) => api.delete(`/admin/products/${id}/variants/${vid}`),
   fabricTypes:   ()        => api.get('/fabric-types'),
-  updateCategory: (id, d)  => api.put(`/admin/categories/${id}`, d),
-  deleteCategory: (id)     => api.delete(`/admin/categories/${id}`),
-  toggleCategory: (id)     => api.put(`/admin/categories/${id}/toggle`),
 
   // Orders
   orders:           (p)    => api.get('/admin/orders', { params: p }),
@@ -173,6 +179,8 @@ export const adminAPI = {
   updateTracking:   (id,d) => api.put(`/admin/orders/${id}/tracking`, d),
   orderInvoice:     (id)   => api.get(`/admin/orders/${id}/invoice`, { responseType: 'blob' }),
   addOrderNote:     (id,d) => api.post(`/admin/orders/${id}/notes`, d),
+  assignOrderTailor: (id,d) => api.put(`/admin/orders/${id}/assign-tailor`, d),
+  saveOrderAdjustments: (id,d) => api.put(`/admin/orders/${id}/adjustments`, d),
 
   // Custom Orders
   customOrders:     (p)    => api.get('/admin/custom-orders', { params: p }),

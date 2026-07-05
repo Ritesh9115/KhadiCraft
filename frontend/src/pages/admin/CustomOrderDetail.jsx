@@ -1,7 +1,7 @@
 // src/pages/admin/CustomOrderDetail.jsx
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { adminAPI } from '../../services/api';
+import { adminAPI, getImageUrl} from '../../services/api';
 import toast from 'react-hot-toast';
 
 const STAGE_ORDER = [
@@ -67,7 +67,8 @@ export default function AdminCustomOrderDetail() {
       setStages(stageRes.data.data || []);
       setTailors(tailorRes.data.data || []);
       setNewStatus(o.status);
-      setSelTailor(o.assigned_tailor_id || '');
+      const at = o.assigned_tailor || o.assigned_tailor_id;
+      setSelTailor(at?.id || at?._id || (typeof at === 'string' ? at : ''));
       setPriceForm({ final_price: o.final_price || '', estimated_ready_date: o.estimated_ready_date || '' });
       setAdminNote(o.admin_notes || '');
     } catch (err) {
@@ -117,7 +118,7 @@ export default function AdminCustomOrderDetail() {
     setSaving(true);
     try {
       await adminAPI.addNote?.(id, { note: adminNote }) || 
-        await fetch(`http://localhost:8000/api/admin/custom-orders/${id}/notes`, {
+        await fetch(`http://localhost:5001/api/admin/custom-orders/${id}/notes`, {
           method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${localStorage.getItem('kc_token')}`},
           body: JSON.stringify({ note: adminNote })
         });
@@ -214,7 +215,7 @@ export default function AdminCustomOrderDetail() {
           {order.reference_image && (
             <div className="admin-table-card">
               <h3 style={{fontSize:'0.9rem',fontWeight:600,marginBottom:'12px'}}>🖼️ Reference Image</h3>
-              <img src={`http://localhost:8000/storage/${order.reference_image}`} alt="Reference"
+              <img src={`${getImageUrl(order.reference_image)}`} alt="Reference"
                 style={{maxWidth:'100%',maxHeight:'300px',borderRadius:'8px',border:'1px solid #e5e7eb',objectFit:'contain'}}/>
             </div>
           )}
@@ -284,11 +285,11 @@ export default function AdminCustomOrderDetail() {
           <div className="admin-table-card">
             <h3 style={{fontSize:'0.88rem',fontWeight:600,marginBottom:'12px'}}>👤 Customer</h3>
             <div style={{display:'flex',gap:'10px',alignItems:'center',marginBottom:'10px'}}>
-              <div style={{width:'36px',height:'36px',borderRadius:'50%',background:'#1B4332',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:600,flexShrink:0}}>{order.user?.name?.[0]}</div>
+              <div style={{width:'36px',height:'36px',borderRadius:'50%',background:'#1B4332',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:600,flexShrink:0}}>{(order.user || order.user_id)?.name?.[0]}</div>
               <div>
-                <div style={{fontWeight:500,fontSize:'0.85rem'}}>{order.user?.name}</div>
-                <div style={{fontSize:'0.72rem',color:'#9ca3af'}}>{order.user?.email}</div>
-                <div style={{fontSize:'0.72rem',color:'#9ca3af'}}>{order.user?.phone}</div>
+                <div style={{fontWeight:500,fontSize:'0.85rem'}}>{(order.user || order.user_id)?.name}</div>
+                <div style={{fontSize:'0.72rem',color:'#9ca3af'}}>{(order.user || order.user_id)?.email}</div>
+                <div style={{fontSize:'0.72rem',color:'#9ca3af'}}>{(order.user || order.user_id)?.phone}</div>
               </div>
             </div>
           </div>
@@ -364,16 +365,18 @@ export default function AdminCustomOrderDetail() {
                 <div style={{padding:'16px',background:'#fef2f2',borderRadius:'8px',color:'#ef4444',fontSize:'0.83rem'}}>⚠️ No tailors found. Add a user with "tailor" role first.</div>
               ) : (
                 <div style={{display:'grid',gap:'8px',maxHeight:'300px',overflowY:'auto'}}>
-                  {tailors.map(t=>(
-                    <label key={t.id} style={{display:'flex',gap:'12px',alignItems:'center',padding:'12px',border:`2px solid ${selTailor==t.id?'#8b5cf6':'#e5e7eb'}`,borderRadius:'8px',cursor:'pointer',background:selTailor==t.id?'#faf5ff':'#fff',transition:'all .2s'}}>
-                      <input type="radio" name="tailor" checked={selTailor==t.id} onChange={()=>setSelTailor(t.id)} style={{accentColor:'#8b5cf6'}}/>
+                  {tailors.map(t=>{
+                    const uid = t.id || t._id;
+                    return (
+                    <label key={uid} style={{display:'flex',gap:'12px',alignItems:'center',padding:'12px',border:`2px solid ${selTailor==uid?'#8b5cf6':'#e5e7eb'}`,borderRadius:'8px',cursor:'pointer',background:selTailor==uid?'#faf5ff':'#fff',transition:'all .2s'}}>
+                      <input type="radio" name="tailor" checked={selTailor==uid} onChange={()=>setSelTailor(uid)} style={{accentColor:'#8b5cf6'}}/>
                       <div style={{width:'34px',height:'34px',borderRadius:'50%',background:'#8b5cf6',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:600,flexShrink:0}}>{t.name?.[0]}</div>
                       <div>
                         <div style={{fontWeight:500,fontSize:'0.85rem'}}>{t.name}</div>
                         <div style={{fontSize:'0.72rem',color:'#9ca3af'}}>{t.phone||t.email}</div>
                       </div>
                     </label>
-                  ))}
+                  )})}
                 </div>
               )}
             </div>

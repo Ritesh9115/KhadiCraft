@@ -20,7 +20,8 @@ export default function Wholesale() {
   const submit = async () => {
     setSubmitting(true);
     try {
-      await wholesaleAPI.apply(form);
+      // Map contact_name -> name for backend compatibility
+      await wholesaleAPI.apply({ ...form, name: form.contact_name });
       setSubmitted(true);
       toast.success('Application submitted! We\'ll contact you within 48 hours.');
     } catch (err) { toast.error(err.response?.data?.message || 'Submission failed'); }

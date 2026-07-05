@@ -63,8 +63,10 @@ export default function AdminUsers() {
                 <tr><th>User</th><th>Phone</th><th>Role</th><th>Joined</th><th>Verified</th><th>Active</th><th>Actions</th></tr>
               </thead>
               <tbody>
-                {users.map(u => (
-                  <tr key={u.id}>
+                {users.map(u => {
+                  const uid = u.id || u._id;
+                  return (
+                  <tr key={uid}>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#1B4332', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.82rem', fontWeight: 600, flexShrink: 0 }}>
@@ -80,7 +82,7 @@ export default function AdminUsers() {
                     <td>
                       <select
                         value={u.role}
-                        onChange={e => changeRole(u.id, e.target.value)}
+                        onChange={e => changeRole(uid, e.target.value)}
                         style={{ padding: '4px 8px', border: `1px solid ${ROLE_COLOR[u.role] || '#e5e7eb'}40`, borderRadius: '4px', background: (ROLE_COLOR[u.role] || '#6b7280') + '12', color: ROLE_COLOR[u.role] || '#6b7280', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 500 }}
                       >
                         {['customer', 'admin', 'staff', 'tailor', 'delivery', 'wholesale'].map(r => (
@@ -92,7 +94,7 @@ export default function AdminUsers() {
                     <td><span style={{ fontSize: '0.78rem' }}>{u.email_verified ? '✅' : '❌'}</span></td>
                     <td>
                       <label className="toggle-switch">
-                        <input type="checkbox" checked={!!u.is_active} onChange={() => toggleUser(u.id)} />
+                        <input type="checkbox" checked={!!u.is_active} onChange={() => toggleUser(uid)} />
                         <span className="toggle-slider" />
                       </label>
                     </td>
@@ -100,13 +102,14 @@ export default function AdminUsers() {
                       <button
                         className="btn-outline-sm"
                         style={{ padding: '4px 10px', fontSize: '0.72rem' }}
-                        onClick={() => window.location.href = `/admin/users/${u.id}`}
+                        onClick={() => window.location.href = `/admin/users/${uid}`}
                       >
                         👁️ View
                       </button>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
                 {!users.length && (
                   <tr><td colSpan={7} style={{ textAlign: 'center', padding: '48px', color: '#9ca3af' }}>No users found</td></tr>
                 )}

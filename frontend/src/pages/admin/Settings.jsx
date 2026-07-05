@@ -9,10 +9,16 @@ export default function AdminSettings() {
 
   useEffect(() => {
     adminAPI.settings().then(r => {
-      const s = {};
-      (r.data.data || []).forEach(x => s[x.key] = x.value);
-      setSettings(s);
-    });
+      const raw = r.data.data;
+      // Backend returns either an object {key:value} or array [{key,value}]
+      if (Array.isArray(raw)) {
+        const s = {};
+        raw.forEach(x => { s[x.key] = x.value; });
+        setSettings(s);
+      } else if (raw && typeof raw === 'object') {
+        setSettings(raw); // already {key:value} map
+      }
+    }).catch(() => {}); // settings may be empty on first run
   }, []);
 
   const set = (key, val) => setSettings(s => ({ ...s, [key]: val }));
@@ -20,7 +26,8 @@ export default function AdminSettings() {
   const save = async () => {
     setSaving(true);
     try {
-      await adminAPI.updateSettings(settings);
+      // Backend bulkUpdate expects { settings: { key: value } }
+      await adminAPI.updateSettings({ settings });
       toast.success('Settings saved!');
     } catch { toast.error('Save failed'); }
     finally { setSaving(false); }

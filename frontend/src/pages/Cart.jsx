@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useCartStore } from '../context/authStore';
+import { getImageUrl } from '../services/api';
 
 export default function Cart() {
   const { items, removeItem, updateQty, total: totalFn, clearCart } = useCartStore();
@@ -33,7 +34,7 @@ export default function Cart() {
             <div key={item.key} style={{ display: 'flex', gap: '16px', background: '#fff', borderRadius: '8px', padding: '16px', border: '1px solid #f0ece4' }}>
               <div style={{ width: '90px', height: '90px', background: '#f7f2ea', borderRadius: '6px', flexShrink: 0, overflow: 'hidden' }}>
                 {item.product.thumbnail
-                  ? <img src={`http://localhost:8000/storage/${item.product.thumbnail}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
+                  ? <img src={`${getImageUrl(item.product.thumbnail)}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="" />
                   : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem' }}>🏷️</div>}
               </div>
               <div style={{ flex: 1 }}>

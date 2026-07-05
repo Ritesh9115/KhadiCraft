@@ -1,30 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { productAPI } from '../services/api';
+import { productAPI, getImageUrl } from '../services/api';
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // UI Interaction States
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeFabChip, setActiveFabChip] = useState('Khadi Cotton');
 
-  // Fetch Products
   useEffect(() => {
-    const fetchFeatured = async () => {
+    const fetchData = async () => {
       try {
-        const res = await productAPI.list({ limit: 4, featured: 1 });
-        setFeaturedProducts(res.data?.data || []);
+        const [prodRes, catRes] = await Promise.all([
+          productAPI.list({ limit: 4, featured: 1 }),
+          productAPI.categories ? productAPI.categories() : fetch('http://localhost:5001/api/categories').then(r=>r.json()),
+        ]);
+        setFeaturedProducts(prodRes.data?.data || []);
+        const catData = catRes?.data?.data || catRes?.data || [];
+        setCategories(Array.isArray(catData) ? catData.slice(0, 4) : []);
       } catch (err) {
-        console.error('Error fetching featured products', err);
+        console.error('Error fetching homepage data', err);
       } finally {
         setLoading(false);
       }
     };
-    fetchFeatured();
+    fetchData();
   }, []);
 
   // Scroll & Animation Effects
@@ -495,54 +499,38 @@ export default function Home() {
           <Link to="/shop" className="view-all">View All Categories →</Link>
         </div>
         <div className="categories-grid">
-          <Link to="/shop/fabric-thaan" className="cat-card cat-1">
-            <div className="cat-bg">
-              <div className="cat-pattern"></div>
-              <div className="cat-icon">🧶</div>
-              <div className="cat-info">
-                <div className="cat-label">Category 01</div>
-                <div className="cat-name">Fabric &<br/>Raw Cloth</div>
-                <div className="cat-count">240+ products</div>
-                <div className="cat-arrow">→</div>
-              </div>
-            </div>
-          </Link>
-          <Link to="/shop/ready-made" className="cat-card cat-2">
-            <div className="cat-bg">
-              <div className="cat-pattern"></div>
-              <div className="cat-icon">👔</div>
-              <div className="cat-info">
-                <div className="cat-label">Category 02</div>
-                <div className="cat-name">Ready-Made<br/>Clothing</div>
-                <div className="cat-count">580+ products</div>
-                <div className="cat-arrow">→</div>
-              </div>
-            </div>
-          </Link>
-          <Link to="/custom-tailoring" className="cat-card cat-3">
-            <div className="cat-bg">
-              <div className="cat-pattern"></div>
-              <div className="cat-icon">✂️</div>
-              <div className="cat-info">
-                <div className="cat-label">Category 03</div>
-                <div className="cat-name">Custom<br/>Tailoring</div>
-                <div className="cat-count">All styles available</div>
-                <div className="cat-arrow">→</div>
-              </div>
-            </div>
-          </Link>
-          <Link to="/wholesale" className="cat-card cat-4">
-            <div className="cat-bg">
-              <div className="cat-pattern"></div>
-              <div className="cat-icon">📦</div>
-              <div className="cat-info">
-                <div className="cat-label">Category 04</div>
-                <div className="cat-name">Wholesale<br/>& Bulk</div>
-                <div className="cat-count">MOQ from 10 units</div>
-                <div className="cat-arrow">→</div>
-              </div>
-            </div>
-          </Link>
+          {(categories.length > 0 ? categories : [
+            { name: 'Shirting Fabrics', slug: 'shirting-fabrics', image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600&q=80', icon: '🧶', count: '240+' },
+            { name: 'Suiting Fabrics',  slug: 'suiting-fabrics',  image: 'https://images.unsplash.com/photo-1593032465171-8bdc0c31d0f4?w=600&q=80', icon: '👔', count: '180+' },
+            { name: 'Kurta Fabrics',    slug: 'kurta-fabrics',    image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80', icon: '✏️', count: '320+' },
+            { name: 'Sherwani Fabrics', slug: 'sherwani-fabrics', image: 'https://images.unsplash.com/photo-1610189004549-3b4f54b27caa?w=600&q=80', icon: '👗', count: 'Bulk Orders' },
+          ]).map((cat, idx) => {
+            const OVERLAYS = [
+              'linear-gradient(160deg,rgba(45,80,22,0.75) 0%,rgba(27,58,14,0.85) 100%)',
+              'linear-gradient(160deg,rgba(74,44,10,0.75) 0%,rgba(46,26,6,0.85) 100%)',
+              'linear-gradient(160deg,rgba(27,67,50,0.75) 0%,rgba(13,42,30,0.85) 100%)',
+              'linear-gradient(160deg,rgba(44,22,84,0.75) 0%,rgba(24,13,48,0.85) 100%)',
+            ];
+            const imgUrl = cat.image ? (cat.image.startsWith('http') ? cat.image : getImageUrl(cat.image)) : null;
+            return (
+              <Link to={`/shop/${cat.slug}`} key={cat.slug || idx} className={`cat-card cat-${(idx%4)+1}`}>
+                <div className="cat-bg" style={imgUrl ? {
+                  backgroundImage: `${OVERLAYS[idx%4]}, url(${imgUrl})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                } : {}}>
+                  <div className="cat-pattern"></div>
+                  <div className="cat-icon">{cat.icon || ['🧶','👔','✂️','📦'][idx%4]}</div>
+                  <div className="cat-info">
+                    <div className="cat-label">Category {String(idx+1).padStart(2,'0')}</div>
+                    <div className="cat-name">{cat.name}</div>
+                    <div className="cat-count">{cat.count || (cat.products_count ? `${cat.products_count} products` : 'Shop Now')}</div>
+                    <div className="cat-arrow">→</div>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -567,7 +555,7 @@ export default function Home() {
                   <Link to={`/product/${p.slug}`} key={p.id} className="product-card product-card-anim">
                     <div className="product-img-wrap">
                       {p.thumbnail ? (
-                        <img src={`http://localhost:8000/storage/${p.thumbnail}`} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <img src={p.thumbnail.startsWith('http') ? p.thumbnail : `http://localhost:5001/storage/${p.thumbnail}`} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
                         <div className="product-img-placeholder">🥻</div>
                       )}

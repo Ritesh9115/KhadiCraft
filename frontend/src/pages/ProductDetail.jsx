@@ -3,7 +3,7 @@
 // ============================================================
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { productAPI, reviewAPI } from '../services/api';
+import { productAPI, reviewAPI, getImageUrl} from '../services/api';
 import { useCartStore } from '../context/authStore';
 import { useAuthStore } from '../context/authStore';
 import toast from 'react-hot-toast';
@@ -87,7 +87,7 @@ export default function ProductDetail() {
         <div>
           <div style={{ background: '#f7f2ea', borderRadius: '10px', overflow: 'hidden', aspectRatio: '4/5', marginBottom: '12px', position: 'relative' }}>
             {images[selImg]?.image_path
-              ? <img src={`http://localhost:8000/storage/${images[selImg].image_path}`} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+              ? <img src={`${getImageUrl(images[selImg].image_path)}`} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
               : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem' }}>🏷️</div>
             }
             {disc > 0 && <div style={{ position: 'absolute', top: '14px', left: '14px', background: '#1B4332', color: '#fff', padding: '5px 12px', borderRadius: '2px', fontSize: '0.78rem', fontWeight: 600 }}>{disc}% OFF</div>}
@@ -97,7 +97,7 @@ export default function ProductDetail() {
               {images.map((img, i) => (
                 <button key={i} onClick={() => setSelImg(i)} style={{ aspectRatio: '1', background: '#f7f2ea', borderRadius: '6px', overflow: 'hidden', border: `2px solid ${selImg === i ? '#1B4332' : 'transparent'}`, cursor: 'pointer', padding: 0 }}>
                   {img.image_path
-                    ? <img src={`http://localhost:8000/storage/${img.image_path}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+                    ? <img src={`${getImageUrl(img.image_path)}`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🏷️</div>
                   }
                 </button>
@@ -254,7 +254,7 @@ export default function ProductDetail() {
             {related.map(p => (
               <Link to={`/product/${p.slug}`} key={p.id} style={{ textDecoration: 'none', color: 'inherit', background: '#fff', border: '1px solid #f0ece4', borderRadius: '8px', overflow: 'hidden', transition: 'all .2s', display: 'block' }}>
                 <div style={{ aspectRatio: '3/4', background: '#f7f2ea', overflow: 'hidden' }}>
-                  {p.thumbnail ? <img src={`http://localhost:8000/storage/${p.thumbnail}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name}/> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem' }}>🏷️</div>}
+                  {p.thumbnail ? <img src={`${getImageUrl(p.thumbnail)}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={p.name}/> : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem' }}>🏷️</div>}
                 </div>
                 <div style={{ padding: '12px' }}>
                   <div style={{ fontFamily: 'Georgia,serif', fontSize: '0.92rem', marginBottom: '5px' }}>{p.name}</div>

@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
-import { adminAPI } from '../../services/api';
+import { adminAPI, getImageUrl} from '../../services/api';
 import toast from 'react-hot-toast';
 
 export default function ProductForm() {
@@ -32,14 +32,41 @@ export default function ProductForm() {
   const loadMeta = async () => {
     const [cats, fabs] = await Promise.all([adminAPI.categories(), adminAPI.fabricTypes ? adminAPI.fabricTypes() : Promise.resolve({data:{data:[]}})]);
     setCategories(cats.data.data?.data || cats.data.data || []);
-    // fabric types from settings
-    try { const f = await fetch('http://localhost:8000/api/fabric-types'); const d = await f.json(); setFabricTypes(d.data); } catch {}
+    setFabricTypes(fabs?.data?.data || []);
   };
 
   const loadProduct = async () => {
     try {
-      const res = await adminAPI.products({ search:'', page:1 }); // stub - use product show endpoint
-      // In real implementation: const res = await adminAPI.product(id);
+      const res = await adminAPI.product(id);
+      const p = res.data.data;
+      if (!p) return;
+      setForm({
+        name:                  p.name                   || '',
+        category_id:           p.category_id?._id?.toString() || p.category_id?.toString() || '',
+        fabric_type_id:        p.fabric_type_id?._id?.toString() || p.fabric_type_id?.toString() || '',
+        sku:                   p.sku                    || '',
+        short_description:     p.short_description      || '',
+        description:           p.description            || '',
+        price:                 p.price                  ?? '',
+        sale_price:            p.sale_price             ?? '',
+        cost_price:            p.cost_price             ?? '',
+        stock:                 p.stock                  ?? '',
+        low_stock_alert:       p.low_stock_alert        ?? '10',
+        weight:                p.weight                 ?? '',
+        unit:                  p.unit                   || 'piece',
+        product_type:          p.product_type           || 'simple',
+        is_active:             p.is_active              !== false,
+        is_featured:           p.is_featured            === true,
+        is_custom_available:   p.is_custom_available    === true,
+        is_wholesale_available:p.is_wholesale_available !== false,
+        wholesale_min_qty:     p.wholesale_min_qty      ?? '10',
+        wholesale_price:       p.wholesale_price        ?? '',
+        meta_title:            p.meta_title             || '',
+        meta_description:      p.meta_description       || '',
+        tags:                  Array.isArray(p.tags) ? p.tags : [],
+      });
+      if (p.images?.length) setExistingImgs(p.images);
+      if (p.variants?.length) setVariants(p.variants.map((v, i) => ({ ...v, id: v._id?.toString() || i })));
     } catch { toast.error('Failed to load product'); }
   };
 
@@ -134,7 +161,7 @@ export default function ProductForm() {
                   <label className="form-label required">Category</label>
                   <select className="form-select" value={form.category_id} onChange={e=>set('category_id',e.target.value)}>
                     <option value="">Select Category</option>
-                    {categories.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+                    {categories.map(c=><option key={c.id || c._id} value={c.id || c._id}>{c.name}</option>)}
                   </select>
                   {errors.category_id && <span className="form-error">{errors.category_id[0]}</span>}
                 </div>
@@ -142,7 +169,7 @@ export default function ProductForm() {
                   <label className="form-label">Fabric Type</label>
                   <select className="form-select" value={form.fabric_type_id} onChange={e=>set('fabric_type_id',e.target.value)}>
                     <option value="">Select Fabric</option>
-                    {fabricTypes.map(f=><option key={f.id} value={f.id}>{f.name}</option>)}
+                    {fabricTypes.map(f=><option key={f.id || f._id} value={f.id || f._id}>{f.name}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
@@ -314,7 +341,7 @@ export default function ProductForm() {
               <div className="img-preview-grid">
                 {existingImgs.map(img=>(
                   <div key={img.id} className="img-preview">
-                    <img src={`http://localhost:8000/storage/${img.image_path}`} alt=""/>
+                    <img src={`${getImageUrl(img.image_path)}`} alt=""/>
                     <button className="img-preview-del">✕</button>
                   </div>
                 ))}

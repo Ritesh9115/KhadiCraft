@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { profileAPI, orderAPI, paymentAPI } from '../services/api';
+import { profileAPI, orderAPI, paymentAPI, getImageUrl} from '../services/api';
 import { useCartStore } from '../context/authStore';
 import toast from 'react-hot-toast';
 
@@ -96,6 +96,7 @@ export default function Checkout() {
         shipping_address_id: selAddr,
       });
       order = res.data.data;
+      clearCart();
     } catch (err) {
       const errors = err.response?.data?.errors;
       if (errors) Object.values(errors).forEach(e => toast.error(Array.isArray(e) ? e[0] : e));
@@ -139,7 +140,6 @@ export default function Checkout() {
             razorpay_signature:  response.razorpay_signature,
             order_id:            order.id,
           });
-          clearCart();
           toast.success('Payment successful! 🎉');
           navigate(`/order-success/${order.order_number}`);
         } catch {
@@ -282,7 +282,7 @@ export default function Checkout() {
                 {items.map(item => (
                   <div key={item.key} style={{ display:'flex', gap:'12px', alignItems:'center', padding:'10px', background:'#f9fafb', borderRadius:'6px' }}>
                     <div style={{ width:'44px', height:'44px', background:'#f7f2ea', borderRadius:'6px', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.1rem' }}>
-                      {item.product.thumbnail ? <img src={`http://localhost:8000/storage/${item.product.thumbnail}`} style={{ width:'100%', height:'100%', objectFit:'cover', borderRadius:'6px' }} alt=""/> : '🏷️'}
+                      {item.product.thumbnail ? <img src={`${getImageUrl(item.product.thumbnail)}`} style={{ width:'100%', height:'100%', objectFit:'cover', borderRadius:'6px' }} alt=""/> : '🏷️'}
                     </div>
                     <div style={{ flex:1 }}>
                       <div style={{ fontSize:'0.85rem', fontWeight:500 }}>{item.product.name}</div>

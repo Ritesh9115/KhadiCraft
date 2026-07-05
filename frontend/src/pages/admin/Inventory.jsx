@@ -28,10 +28,9 @@ export default function AdminInventory() {
   const saveAdjust = async () => {
     try {
       await adminAPI.adjustStock({ 
-  adjustments: [
-    { product_id: adjustModal.id, ...adjustForm }
-  ] 
-});
+        product_id: adjustModal.id, 
+        ...adjustForm 
+      });
       toast.success('Stock adjusted!');
       setAdjustModal(null);
       setAdjustForm({ type:'stock_in', quantity:'', notes:'' });
@@ -58,7 +57,7 @@ export default function AdminInventory() {
           { label:'Total Products', value:products.length, color:'#1B4332', bg:'#f0fdf4', icon:'🏷️' },
           { label:'Low Stock',      value:lowStock.length, color:'#f59e0b', bg:'#fffbeb', icon:'⚠️' },
           { label:'Out of Stock',   value:products.filter(p=>p.stock===0).length, color:'#ef4444', bg:'#fef2f2', icon:'❌' },
-          { label:'Total Stock Value', value:`₹${products.reduce((s,p)=>s+(p.stock*(p.cost_price||p.price)),0).toLocaleString()}`, color:'#8b5cf6', bg:'#faf5ff', icon:'💰' },
+          { label:'Total Stock Value', value:`₹${products.reduce((s,p)=>s+(p.stock*(Number(p.cost_price)||Number(p.price)||0)),0).toLocaleString()}`, color:'#8b5cf6', bg:'#faf5ff', icon:'💰' },
         ].map((c,i)=>(
           <div key={i} style={{ background:c.bg, border:`1px solid ${c.color}20`, borderRadius:'10px', padding:'16px', display:'flex', alignItems:'center', gap:'12px' }}>
             <div style={{ fontSize:'1.6rem' }}>{c.icon}</div>
@@ -96,7 +95,7 @@ export default function AdminInventory() {
                     </div>
                   </td>
                   <td style={{ fontSize:'0.82rem', color:'#6b7280' }}>{p.low_stock_alert}</td>
-                  <td style={{ fontSize:'0.82rem' }}>₹{(p.stock*(p.cost_price||p.price)).toLocaleString()}</td>
+                  <td style={{ fontSize:'0.82rem' }}>₹{(p.stock*(Number(p.cost_price)||Number(p.price)||0)).toLocaleString()}</td>
                   <td>
                     <button onClick={()=>setAdjustModal(p)} className="btn-outline-sm" style={{ padding:'4px 10px', fontSize:'0.73rem' }}>📦 Adjust Stock</button>
                   </td>

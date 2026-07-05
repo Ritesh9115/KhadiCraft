@@ -97,11 +97,17 @@ export default function AdminAppointments() {
                         {a.status === 'pending' && (
                           <button onClick={() => updateStatus(a.id, 'confirmed')} className="btn-primary-sm" style={{ padding: '4px 8px', fontSize: '0.7rem' }}>✓ Confirm</button>
                         )}
-                        {a.status !== 'cancelled' && a.status !== 'completed' && (
+                        {!['cancelled', 'completed', 'no_show'].includes(a.status) && (
                           <button onClick={() => updateStatus(a.id, 'completed')} className="btn-outline-sm" style={{ padding: '4px 8px', fontSize: '0.7rem' }}>✅ Done</button>
                         )}
-                        {a.status !== 'cancelled' && (
-                          <button onClick={() => updateStatus(a.id, 'cancelled')} className="btn-danger-sm" style={{ padding: '4px 8px', fontSize: '0.7rem' }}>✕</button>
+                        {!['cancelled', 'completed', 'no_show'].includes(a.status) && (
+                          <button onClick={() => updateStatus(a.id, 'cancelled')} className="btn-danger-sm" style={{ padding: '4px 8px', fontSize: '0.7rem' }}>✕ Cancel</button>
+                        )}
+                        {a.status === 'completed' && (
+                          <span style={{ fontSize: '0.72rem', color: '#059669', fontWeight: 500 }}>✅ Completed</span>
+                        )}
+                        {a.status === 'cancelled' && (
+                          <span style={{ fontSize: '0.72rem', color: '#ef4444', fontWeight: 500 }}>✕ Cancelled</span>
                         )}
                       </div>
                     </td>
